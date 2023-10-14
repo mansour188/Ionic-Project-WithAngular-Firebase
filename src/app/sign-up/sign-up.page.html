@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>todo App</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>sign Up </ion-card-title>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-item fill="solid">
+        <ion-label position="floating">name</ion-label>
+        <ion-input [(ngModel)]="name" type="text" ngModel name></ion-input>
+        <ion-note slot="helper">Enter a name</ion-note>
+      </ion-item>
+      <ion-item fill="solid">
+        <ion-label position="floating">Email</ion-label>
+        <ion-input [(ngModel)]="email" type="email" ngModel email ></ion-input>
+        <ion-note slot="helper">Enter a valid email</ion-note>
+        <ion-note slot="error">Invalid email</ion-note>
+      </ion-item>
+      <ion-item fill="solid">
+        <ion-label position="floating">password</ion-label>
+        <ion-input [(ngModel)]="password" color="secondary" type="password" ngModel password></ion-input>
+        <ion-note slot="helper">Enter password</ion-note>
+      </ion-item>
+    </ion-card-content>
+    <ion-button (click)="hundelSubmit()"  expand="block">
+      <ion-icon  slot="end" name="assets\icon\sginUp.svg"></ion-icon>
+      Left Icon
+    </ion-button>
+  </ion-card>
+  
+
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-footer>
