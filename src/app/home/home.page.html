@@ -1,6 +1,20 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="secondary">
-    <ion-title> Todo App </ion-title>
+   
+        <ion-title> Todo App </ion-title>
+          <ion-chip slot="end">
+          <ion-avatar>
+            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ion-avatar>
+          <ion-label>{{email}}</ion-label>
+          <ion-button shape="round" size="small" color="danger" (click)="logOut()">log out</ion-button>
+         
+        </ion-chip>
+     
+    
+   
+
+
   </ion-toolbar>
 </ion-header>
 

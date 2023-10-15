@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,10 @@ export class AuthserviceService {
 
 
 
-  constructor(private afAuth: AngularFireAuth) {
+
+
+  constructor(private afAuth: AngularFireAuth,private shared:SharedService) {
+    
 
   
  
@@ -21,6 +25,7 @@ export class AuthserviceService {
       return userCredential.user.updateProfile({
         displayName: name
       }).then(() => {
+
         return userCredential.user; // Return the user data
       });;
     }else{
@@ -45,4 +50,30 @@ export class AuthserviceService {
       }
     });
    }
+
+
+   signIn = (email:string, password:string) => {
+    return this.afAuth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        if (userCredential && userCredential.user!=null) {
+         console.log(userCredential.user.email)
+         this.shared.email=userCredential.user.email
+         localStorage.setItem("email",email)
+       
+          return userCredential.user; 
+        } else {
+          throw new Error("User not found or unable to sign in");
+        }
+      })
+      .catch((error) => {
+        throw new Error("Error while signing in: " + error.message);
+      });
+  };
+
+
+  logOut=()=>{
+    return this.afAuth.signOut()
+  }
+
+
 }

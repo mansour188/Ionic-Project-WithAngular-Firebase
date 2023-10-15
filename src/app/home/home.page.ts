@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { TasksServiceService } from '../tasks-service.service';
+import { AuthserviceService } from '../authservice.service';
+import { Router } from '@angular/router';
+import { SharedService } from '../shared.service';
 
 
 @Component({
@@ -12,10 +15,16 @@ export class HomePage {
   currentDate:any;
   allTasks:any[] = [];
   showAddButton = true;
+  email!:string|null
   constructor(
     private taskSer: TasksServiceService,
-    private alertController: AlertController
-  ) {}
+    private alertController: AlertController,
+    private auth:AuthserviceService,
+    private router:Router,
+    private shared:SharedService
+  ) {
+    
+  }
 
   toggleBtn() {
     this.showAddButton = !this.showAddButton;
@@ -94,9 +103,22 @@ export class HomePage {
     });
   }
 
+  logOut=()=>{
+    localStorage.clear()
+    this.auth.logOut()
+    this.router.navigate(['/sginIn'])
+
+
+  }
+
   ngOnInit() {
     this.currentDate = new Date();
     this.getTasks();
+    this.email=localStorage.getItem("email");
+    console.log(this.email)
+  
   }
+
+
 }
 
