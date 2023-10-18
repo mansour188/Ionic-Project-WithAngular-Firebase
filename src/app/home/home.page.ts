@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { AlertController } from '@ionic/angular';
-import { TasksServiceService } from '../tasks-service.service';
+import { Component, ViewChild } from '@angular/core';
+import { AlertController, IonModal } from '@ionic/angular';
+import { AnnonceService } from '../annonce-service';
 import { AuthserviceService } from '../authservice.service';
 import { Router } from '@angular/router';
-import { SharedService } from '../shared.service';
+import { UploadImageTofireService } from '../upload-image-tofire.service';
 
 
 @Component({
@@ -12,16 +12,31 @@ import { SharedService } from '../shared.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {  
+  @ViewChild(IonModal)modal!: IonModal;
+  isModalOpen = false;
+
   currentDate:any;
-  allTasks:any[] = [];
+  allAnnonce:any[] = [];
   showAddButton = true;
   email!:string|null
+  file!:File;
+  urlImage!:string
+  category!:string
+  product!:string
+  webLink!:string
+  fileUrl!:string
+  discription!:string
+  updateId!:string
+
+    
+   
+
   constructor(
-    private taskSer: TasksServiceService,
+    private annonceSer:AnnonceService ,
     private alertController: AlertController,
     private auth:AuthserviceService,
     private router:Router,
-    private shared:SharedService
+    private imUp:UploadImageTofireService
   ) {
     
   }
@@ -30,23 +45,35 @@ export class HomePage {
     this.showAddButton = !this.showAddButton;
   }
 
-  addNewTask(txtValue:any) {
-    let newTask = {
-      checked: false,
-      text: txtValue,
+   addNewAnnonce() {
+   this.uploadImage().then(()=>{
+    const annonce = {
+      category:this.category,
+      product:this.product,
+      webLink: this.webLink,
       date: new Date(),
-      userId:localStorage.getItem("userId")
+      userId:localStorage.getItem("userId"),
+      urlImage:this.urlImage,
+      discription:this.discription
     };
-    this.taskSer.addTask(newTask).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.getTasks();
-        this.toggleBtn();
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.annonceSer.addAnnonce(annonce).subscribe({
+      next:(data)=>{console.log(data)},
+      error:(err)=>{console.log(err.message)}
+    })
+   }).catch(()=>{
+    console.log("failed")
+   })
+
+   this.getAnnonce()
+   
+   this.cancel()
+   
+    
+
+   
+
+   
+ 
   }
 
   async presentAlert(idDocument: any) {
@@ -58,9 +85,9 @@ export class HomePage {
         {
           text: 'Yes',
           handler: () => {
-            this.taskSer.deleteTask(idDocument).subscribe({
+            this.annonceSer.deleteTask(idDocument).subscribe({
               next: (response) => {
-                this.getTasks();
+                this.getAnnonce();
               },
               error: (err) => {
                 console.log(err);
@@ -74,28 +101,20 @@ export class HomePage {
     await alert.present();
   }
 
-  changeCheckedValue(checkedValue:any, idDocument:any) {
-    checkedValue = !checkedValue;
-    this.taskSer.updateTask(checkedValue, idDocument).subscribe({
-      next: (response) => {
-        this.getTasks();
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  }
 
-  getTasks() {
-    this.allTasks = [];
-    this.taskSer.getAllTasks().subscribe({
+  getAnnonce() {
+    this.allAnnonce = [];
+    this.annonceSer.getAllTasks().subscribe({
       next: (response) => {
         console.log(response);
         for (const key in response) {
         
-          this.allTasks.push({ id: key, ...response[key] });
+          this.allAnnonce.push({ id: key, ...response[key] });
         }
-        console.log(this.allTasks);
+        const userId=localStorage.getItem("userId")
+     
+        this.allAnnonce=this.allAnnonce.filter((task)=>{ return task.userId===userId})
+        console.log(this.allAnnonce)
       },
       error: (err) => {
         console.log(err);
@@ -103,22 +122,126 @@ export class HomePage {
     });
   }
 
-  logOut=()=>{
-    localStorage.clear()
-    this.auth.logOut()
-    this.router.navigate(['/sginIn'])
+ 
+  async presentAlertLogout() {
+    const alert = await this.alertController.create({
+      header: 'Confirm',
+      message: 'Etes vous sur de log out?',
+      buttons: [
+        'No',
+        {
+          text: 'Yes',
+          handler: ()=>{
+            localStorage.clear()
+            this.auth.logOut()
+            this.router.navigate(['/sginIn'])
+        
+        
+          },
+        },
+      ],
+    });
 
-
+    await alert.present();
   }
+
+  cancel() {
+    this.modal.dismiss(null, 'cancel');
+  }
+ 
 
   ngOnInit() {
     this.currentDate = new Date();
-    this.getTasks();
+    this.getAnnonce();
     this.email=localStorage.getItem("email");
     console.log(this.email)
   
   }
+  onFileSelected(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files && inputElement.files.length > 0) {
+      const file = inputElement.files[0];
+     
+     this.file=file
+     const fileUrl = URL.createObjectURL(file);
+     this.fileUrl=fileUrl
 
+     
+    }
+  }
+
+
+  uploadImage = () => {
+    return new Promise((resolve, reject) => {
+         this.imUp.uploadImage(this.file).subscribe(
+          (snapshot) => {
+            if (snapshot) {
+              snapshot.ref
+                .getDownloadURL()
+                .then((downloadURL) => {
+                  this.urlImage = downloadURL;
+                  console.log(this.urlImage);
+                  resolve(this.urlImage); // Resolve the Promise when URL is available
+                })
+                .catch((error) => {
+                  console.error('Error getting download URL:', error);
+                  reject(error); // Reject the Promise in case of an error
+                });
+            }
+          },
+          (error) => {console.log(error)}
+    )
+  })
+}
+
+  
+
+ 
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
+
+
+  update=(obj:any)=>{
+  this.category=obj.category
+  this.product=obj.product
+  this.urlImage=obj.urlImage
+  this.discription=obj.discription
+  this.webLink=obj.webLink
+  this.updateId=obj.id
+  console.log(this.updateId)
+  
+   
+
+
+  }
+  sendUpdate=()=>{
+    this.imUp.deleteImage(this.urlImage)
+    this.uploadImage().then(()=>{
+      const annonce = {
+        category:this.category,
+        product:this.product,
+        webLink: this.webLink,
+        date: new Date(),
+        userId:localStorage.getItem("userId"),
+        urlImage:this.urlImage,
+        discription:this.discription
+      };
+      this.annonceSer.updateAnnonce(annonce,this.updateId).subscribe({
+        next:(data)=>{console.log(data)},
+        error:(err)=>{throw new Error(err.message)}
+      })
+     }).catch(()=>{
+      console.log("failed")
+     })
+
+    this.setOpen(false)
+    this.getAnnonce()
+
+ 
+
+  }
 
 }
 

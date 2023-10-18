@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { SharedService } from './shared.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class AuthserviceService {
 
 
 
-  constructor(private afAuth: AngularFireAuth,private shared:SharedService) {
+  constructor(private afAuth: AngularFireAuth) {
     
 
   
@@ -57,7 +57,6 @@ export class AuthserviceService {
       .then((userCredential) => {
         if (userCredential && userCredential.user!=null) {
          console.log(userCredential.user.email)
-         this.shared.email=userCredential.user.email
          localStorage.setItem("email",email)
        
           return userCredential.user; 

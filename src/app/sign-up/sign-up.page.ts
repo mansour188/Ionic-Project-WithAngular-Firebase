@@ -20,23 +20,22 @@ export class SignUpPage implements OnInit {
 
 
    hundelSubmit=()=>{
-    console.log(this.email,this.password,this.name)
     this.auth.register(this.name,this.email,this.password).then((userCredential)=>{
       this.msg="sginUp successfully"
       this.auth.getTokenAndUserId()
       
       
      
-        this.router.navigate(['/sginIn']);
+        setTimeout(()=>{
+          this.router.navigate(['/sginIn']);
+        },1000)
         
    
 
      
     }).catch((error)=>{
       this.msg=error.message
-      setTimeout(()=>{
-        this.msg=""
-      },5000)
+     
       
     })
     
@@ -53,7 +52,6 @@ export class SignUpPage implements OnInit {
   }
 
   ngOnInit() {
-  this.msg=""
   }
 
 }

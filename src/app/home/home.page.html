@@ -1,13 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="secondary">
    
-        <ion-title> Todo App </ion-title>
+        <ion-title> My App </ion-title>
           <ion-chip slot="end">
           <ion-avatar>
             <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
           </ion-avatar>
           <ion-label>{{email}}</ion-label>
-          <ion-button shape="round" size="small" color="danger" (click)="logOut()">log out</ion-button>
+          <ion-button shape="round" size="small" color="danger" (click)="presentAlertLogout()">log out</ion-button>
          
         </ion-chip>
      
@@ -19,53 +19,246 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="bg-img">
-    <h1>Today,</h1>
-    <h5>{{ currentDate | date:'shortDate' }}</h5>
+   <ion-button fill="clear" class="ion-margin-top" id="open-modal" size="default" >  <ion-icon size="large"  slot="icon-only" icon="../../assets/icon/add.svg"  ></ion-icon>  </ion-button>
+   <ion-grid>
+    <ion-row *ngFor="let annonce of allAnnonce ">
+     <ion-col size="10" offset="1">
+      <ion-card>
+        <a *ngIf="annonce.webLink" href="annonce.webLink">other details .</a>
+        <ion-img *ngIf="annonce.urlImage" alt="Silhouette of mountains" [src]="annonce.urlImage" > </ion-img>
+        <ion-card-header>
+          <ion-card-title>{{annonce.product}}</ion-card-title>
+          <ion-card-subtitle>{{annonce.category}}</ion-card-subtitle>
+        </ion-card-header>
+         <div *ngIf="annonce.discription">
+          <ion-card-content >
+            {{annonce.discription}}
 
-    <ion-card *ngFor="let task of allTasks">
-      <ion-item-sliding>
-        <ion-item>
-          <ion-checkbox
-            (ionChange)="changeCheckedValue(task.checked, task.id)"
-            [checked]="task.checked"
-          ></ion-checkbox>
-          <ion-label>
-            <p *ngIf="!task.checked">{{ task.text }} </p>
-            <p *ngIf="task.checked" style="text-decoration: line-through">
-              {{ task.text }} 
-            </p>
-            <p>{{ task.date | date:'shortTime'}}</p>
-          </ion-label>
-        </ion-item>
-        <ion-item-options>
-          <ion-item-option (click)="presentAlert(task.id)" color="danger"
-            >Delete</ion-item-option
-          >
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-card>
 
-    <ion-item *ngIf="!showAddButton">
-      <ion-input #i placeholder="Saisir une tâche"></ion-input>
-      <ion-button shape="round" (click)="addNewTask(i.value)">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
+          </ion-card-content>
+        </div>
+       <ion-row>
+        <ion-col></ion-col>
+        <ion-col></ion-col>
+       
 
-    <ion-button
-      (click)="toggleBtn()"
-      *ngIf="showAddButton"
-      color="dark"
-      expand="block"
-      >Ajouter une tâche</ion-button
-    >
-    <ion-button
-      (click)="toggleBtn()"
-      *ngIf="!showAddButton"
-      color="danger"
-      expand="block"
-      >Annuler</ion-button
-    >
-  </div>
+        <ion-col>
+          <ion-button  id="open-update" fill="clear"  (click)="update(annonce);setOpen(true)" ><ion-icon size="large"  slot="icon-only" icon="../../assets/icon/update.svg"  ></ion-icon></ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button fill="clear" (click)="presentAlert(annonce.id)"><ion-icon size="large"  slot="icon-only" icon="../../assets/icon/delete.svg"  ></ion-icon></ion-button>
+
+        </ion-col>
+
+       </ion-row>
+
+         
+         
+
+       
+      </ion-card>
+     </ion-col>
+    </ion-row>
+   </ion-grid>
+
+
+   <!--add new Annonce -->
+ 
+  <ion-modal trigger="open-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Add new Product</ion-title>
+          <ion-buttons slot="end">
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form>
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="text"
+            fill="solid"
+            label="Product Category"
+            name="category"
+            labelPlacement="floating"
+            helperText="enter Category of your product"
+            errorText=""
+            [(ngModel)]="category"
+            
+          ></ion-input>
+            
+          </ion-item>        
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="text"
+            fill="solid"
+            label="Name of Product"
+            labelPlacement="floating"
+            helperText="Enter a name of product"
+            name="product_name"
+            [(ngModel)]="product"
+            required
+            
+          ></ion-input>
+          </ion-item>
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="text"
+            fill="solid"
+            label="web link"
+            labelPlacement="floating"
+            helperText="Enter web link"
+            name="link"
+            
+            [(ngModel)]="webLink"
+            
+          ></ion-input>
+          </ion-item>
+          <ion-item class="ion-margin-top">
+            <ion-textarea label="discription " labelPlacement="floating" placeholder="Enter discription"
+            
+            [(ngModel)]="discription"
+            name="discription"
+            ></ion-textarea>
+
+          </ion-item>
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="file"
+            fill="solid"
+            label="Image of Product"
+            labelPlacement="floating"
+            helperText="upload image"
+            hidden
+            name="image"
+            (change)="onFileSelected($event)"
+           
+            
+            
+          ></ion-input>
+          <i class="ion-ios-plus custom-icon"></i>
+          </ion-item>
+          <ion-item *ngIf="fileUrl">
+            <ion-img 
+               [src]="fileUrl"
+              alt="The Wisconsin State Capitol building in Madison, WI at night"
+            ></ion-img>
+          </ion-item>
+          <ion-button (click)="addNewAnnonce()" expand="block" type="submit" [disabled]="!( product && fileUrl && category )" >submit</ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!--update  Annonce -->
+  <ion-modal  [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+           
+          </ion-buttons>
+          <ion-title>Add new Product</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false)">Close</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form>
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="text"
+           
+            label="Product Category"
+            name="category"
+            value="updatedObj.category"
+            labelPlacement="floating"
+            helperText="enter Category of your product"
+            errorText=""
+            [(ngModel)]="category"
+            
+          ></ion-input>
+            
+          </ion-item>        
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="text"
+            
+            label="Name of Product"
+            labelPlacement="floating"
+            helperText="Enter a name of product"
+            name="product_name"
+            [(ngModel)]="product"
+            value="updatedObj.product"
+            required
+            
+          ></ion-input>
+          </ion-item>
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="text"
+            
+            label="web link"
+            labelPlacement="floating"
+           
+            name="link"
+            value="updatedObj.webLink"
+            
+            [(ngModel)]="webLink"
+            value="updatedObj.webLink"
+
+            
+          ></ion-input>
+          </ion-item>
+          <ion-item class="ion-margin-top">
+            <ion-textarea label="discription " labelPlacement="floating" placeholder="Enter discription"
+            
+            [(ngModel)]="discription"
+            name="discription"
+            value="updatedObj.discription"
+            ></ion-textarea>
+
+          </ion-item>
+          <ion-item class="ion-margin-top">
+            <ion-input
+            type="file"
+           
+            label="Image of Product"
+            labelPlacement="floating"
+            helperText="upload image"
+            
+            name="image"
+            (change)="onFileSelected($event)"
+           
+            
+            
+          ></ion-input>
+          <i class="ion-ios-plus custom-icon"></i>
+          </ion-item>
+          <ion-item >
+            <ion-img 
+               [src]="fileUrl || urlImage"
+              alt="The Wisconsin State Capitol building in Madison, WI at night"
+            ></ion-img>
+          </ion-item>
+          <ion-button   expand="block" (click)="sendUpdate()" type="submit" [disabled]="!( product && fileUrl && category )" >update</ion-button>
+        </form>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+
+
+
+
+
 </ion-content>

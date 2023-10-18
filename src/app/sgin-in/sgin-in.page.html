@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>todo App</ion-title>
+    <ion-title>Todo App</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -28,11 +28,13 @@
         <ion-note slot="helper">Enter password</ion-note>
       </ion-item>
     </ion-card-content>
-    <ion-button (click)="hundelSubmit() ; setOpen(true)"  expand="block"  [disabled]="!( password && email)">
+    <ion-button id="open-loading" (click)="hundelSubmit() ; setOpen(true)"  expand="block"  [disabled]="!( password && email)">
   
      sgin In
     </ion-button>
   </ion-card>
+  <ion-loading trigger="open-loading" message="loading..." duration="3000"></ion-loading>
+
   
 
 </ion-content>
