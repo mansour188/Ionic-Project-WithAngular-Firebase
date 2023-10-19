@@ -3,9 +3,9 @@
     <ion-title>Todo App</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="body">
 
-  <ion-card>
+  <ion-card class="card">
     <ion-card-header>
       <ion-card-title>sign Up </ion-card-title>
       <ion-card-subtitle>
@@ -45,8 +45,3 @@
 [duration]="5000"
 (didDismiss)="setOpen(false)"
 ></ion-toast>
-<ion-footer>
-  <ion-toolbar>
-    <ion-title></ion-title>
-  </ion-toolbar>
-</ion-footer>

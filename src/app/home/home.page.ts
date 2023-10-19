@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, IonModal } from '@ionic/angular';
+import { AlertController, IonContent, IonModal } from '@ionic/angular';
 import { AnnonceService } from '../annonce-service';
 import { AuthserviceService } from '../authservice.service';
 import { Router } from '@angular/router';
@@ -20,13 +20,14 @@ export class HomePage {
   showAddButton = true;
   email!:string|null
   file!:File;
-  urlImage!:string
-  category!:string
-  product!:string
-  webLink!:string
-  fileUrl!:string
-  discription!:string
-  updateId!:string
+  urlImage:string=''
+  category:string=''
+  product:string=''
+  webLink:string=''
+  fileUrl:string=''
+  discription:string=''
+  updateId:string=''
+  @ViewChild(IonContent) content!: IonContent;
 
     
    
@@ -38,6 +39,7 @@ export class HomePage {
     private router:Router,
     private imUp:UploadImageTofireService
   ) {
+   
     
   }
 
@@ -57,14 +59,16 @@ export class HomePage {
       discription:this.discription
     };
     this.annonceSer.addAnnonce(annonce).subscribe({
-      next:(data)=>{console.log(data)},
+      next:(data)=>{console.log(data)
+        this.getAnnonce()
+      },
       error:(err)=>{console.log(err.message)}
     })
    }).catch(()=>{
     console.log("failed")
    })
 
-   this.getAnnonce()
+   
    
    this.cancel()
    
@@ -85,9 +89,11 @@ export class HomePage {
         {
           text: 'Yes',
           handler: () => {
+            
             this.annonceSer.deleteTask(idDocument).subscribe({
               next: (response) => {
                 this.getAnnonce();
+                
               },
               error: (err) => {
                 console.log(err);
@@ -154,7 +160,7 @@ export class HomePage {
     this.currentDate = new Date();
     this.getAnnonce();
     this.email=localStorage.getItem("email");
-    console.log(this.email)
+    
   
   }
   onFileSelected(event: Event) {
@@ -200,10 +206,17 @@ export class HomePage {
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
+    this.product,this.category,this.urlImage,this.discription,this.webLink=""
+
   }
+
+  
+  onSubmit(event: Event) {
+    event.preventDefault();}
 
 
   update=(obj:any)=>{
+  this.fileUrl=""
   this.category=obj.category
   this.product=obj.product
   this.urlImage=obj.urlImage
@@ -229,7 +242,12 @@ export class HomePage {
         discription:this.discription
       };
       this.annonceSer.updateAnnonce(annonce,this.updateId).subscribe({
-        next:(data)=>{console.log(data)},
+        next:(data)=>{
+
+          this.getAnnonce()
+        
+        
+        },
         error:(err)=>{throw new Error(err.message)}
       })
      }).catch(()=>{
@@ -237,10 +255,24 @@ export class HomePage {
      })
 
     this.setOpen(false)
-    this.getAnnonce()
+   
+    
 
  
 
+  }
+  add=()=>{
+    this.urlImage=''
+    this.category=''
+    this.product=''
+    this.webLink=''
+    this.fileUrl=''
+    this.discription=''
+
+  }
+  scrollToTop() {
+    
+    this.content.scrollToTop(500);
   }
 
 }

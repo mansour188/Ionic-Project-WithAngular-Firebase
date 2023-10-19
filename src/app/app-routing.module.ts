@@ -12,6 +12,7 @@ const routes: Routes = [
     path: 'signUp',
     loadChildren: () => import('./sign-up/sign-up.module').then(m => m.SignUpPageModule),
   },
+
   {
     path: '',
     redirectTo: 'home',
@@ -21,6 +22,12 @@ const routes: Routes = [
     path: 'sginIn',
     loadChildren: () => import('./sgin-in/sgin-in.module').then( m => m.SginInPageModule)
   },
+  {
+    path: 'acceul',
+    loadChildren: () => import('./acceul/acceul.module').then( m => m.AcceulPageModule)
+  },
+
+  
   
 ];
 

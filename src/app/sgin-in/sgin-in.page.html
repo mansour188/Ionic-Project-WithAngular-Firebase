@@ -3,49 +3,48 @@
     <ion-title>Todo App</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="body"  >
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>sgin In </ion-card-title>
-      <ion-card-subtitle>
-        if you dont have account <a [routerLink]="['/signUp']"><b> sgin Up </b></a>
-
-      </ion-card-subtitle>
-    </ion-card-header>
+  <div>
+    <ion-card class="card" >
+      <ion-card-header>
+        <ion-card-title>sgin In </ion-card-title>
+        <ion-card-subtitle>
+          if you dont have account <a [routerLink]="['/signUp']"><b> sgin Up </b></a>
   
-    <ion-card-content>
+        </ion-card-subtitle>
+      </ion-card-header>
     
-      <ion-item fill="solid">
-        <ion-label position="floating">Email</ion-label>
-        <ion-input [(ngModel)]="email" type="email" ngModel email ></ion-input>
-        <ion-note slot="helper">Enter a valid email</ion-note>
-        <ion-note slot="error">Invalid email</ion-note>
-      </ion-item>
-      <ion-item fill="solid">
-        <ion-label position="floating">password</ion-label>
-        <ion-input [(ngModel)]="password" color="secondary" type="password" ngModel password></ion-input>
-        <ion-note slot="helper">Enter password</ion-note>
-      </ion-item>
-    </ion-card-content>
-    <ion-button id="open-loading" (click)="hundelSubmit() ; setOpen(true)"  expand="block"  [disabled]="!( password && email)">
+      <ion-card-content>
+      
+        <ion-item fill="solid">
+          <ion-label position="floating">Email</ion-label>
+          <ion-input [(ngModel)]="email" type="email" ngModel email ></ion-input>
+          <ion-note slot="helper">Enter a valid email</ion-note>
+          <ion-note slot="error">Invalid email</ion-note>
+        </ion-item>
+        <ion-item fill="solid">
+          <ion-label position="floating">password</ion-label>
+          <ion-input [(ngModel)]="password" color="secondary" type="password" ngModel password></ion-input>
+          <ion-note slot="helper">Enter password</ion-note>
+        </ion-item>
+      </ion-card-content>
+      <ion-button id="open-loading" (click)="hundelSubmit() ; setOpen(true)"  expand="block"  [disabled]="!( password && email)">
+    
+       sgin In
+      </ion-button>
+    </ion-card>
+    <ion-loading trigger="open-loading" message="loading..." duration="3000"></ion-loading>
   
-     sgin In
-    </ion-button>
-  </ion-card>
-  <ion-loading trigger="open-loading" message="loading..." duration="3000"></ion-loading>
-
-  
+    
+  </div>
 
 </ion-content>
+
 <ion-toast
 [isOpen]="isToastOpen"
 [message]="msg"
 [duration]="5000"
 (didDismiss)="setOpen(false)"
 ></ion-toast>
-<ion-footer>
-  <ion-toolbar>
-    <ion-title></ion-title>
-  </ion-toolbar>
-</ion-footer>
+

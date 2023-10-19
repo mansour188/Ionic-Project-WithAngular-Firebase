@@ -5,7 +5,7 @@ import { Route, Router } from '@angular/router';
 @Component({
   selector: 'app-sgin-in',
   templateUrl: './sgin-in.page.html',
-  styleUrls: ['./sgin-in.page.scss'],
+  styleUrls: ['./sgin-in.page.css'],
 })
 export class SginInPage implements OnInit {
   email:string='';

@@ -1,0 +1,92 @@
+<ion-header >
+  <ion-toolbar >
+   
+        <ion-title>My App</ion-title>
+      
+       
+   
+
+ 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  
+ 
+   <ion-grid>
+    <ion-row *ngFor="let annonce of allAnnonce ">
+     <ion-col size="10" offset="1">
+      <ion-card>
+     
+        <ion-img *ngIf="annonce.urlImage" alt="Silhouette of mountains" [src]="annonce.urlImage" > </ion-img>
+        <ion-card-header>
+      
+          <div>
+            <ion-row>
+              <ion-col>    <ion-card-title><b>product</b>: {{annonce.product}}</ion-card-title></ion-col>
+              <ion-col><b>{{annonce.date | date:'fullDate'}} </b></ion-col>
+
+            </ion-row>
+          </div>
+          <ion-card-subtitle><b>ctegory</b>: {{annonce.category}}</ion-card-subtitle>
+        </ion-card-header>
+         <div *ngIf="annonce.discription">
+          <ion-card-content >
+            <b>discription: </b>  {{annonce.discription}}
+
+
+          </ion-card-content>
+        </div>
+       <ion-row>
+        <ion-col></ion-col>
+        <ion-col></ion-col>
+       
+
+
+
+       </ion-row>
+
+         
+         
+
+       
+      </ion-card>
+     </ion-col>
+    </ion-row>
+   </ion-grid>
+
+
+ 
+
+
+
+
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="menu"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button [routerLink]="'/home'" >
+        
+    
+        <ion-icon name="home"  ></ion-icon>
+      </ion-fab-button>
+     
+      <ion-fab-button [routerLink]="'/acceul'">
+        <ion-icon name="globe"  ></ion-icon>
+        
+      </ion-fab-button>
+     
+    </ion-fab-list>
+  </ion-fab>
+
+
+
+
+
+</ion-content>
+<ion-button  vertical="bottom" fill="clear"  (click)="scrollToTop()"><ion-icon size="large"  slot="icon-only" icon="../../assets/icon/top.svg" ></ion-icon></ion-button>
+
